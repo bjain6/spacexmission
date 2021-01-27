@@ -5,7 +5,7 @@ jQuery(document).ready(function() {
         // NOTE:  This function must return the value 
         //        from calling the $.ajax() method.
         return $.ajax({
-            url: "https://api.spaceXdata.com/v3/launches?limit=100&launch_success=true",
+            url: "https://api.spaceXdata.com/v3/launches?limit=100",
             dataType: "json"
         });
     }
@@ -67,11 +67,20 @@ jQuery(document).ready(function() {
             $("#mem-launch-" + i).html("<span class='title'>Launch Year:</span>" + data[i].launch_year);
             $("#mem-slaunch-" + i).html("<span class='title'> Successful Launch:</span>" + data[i].launch_success);
             $("#mem-slanding-" + i).html("<span class='title'>Successful Landing:</span>" + data[i].rocket.first_stage.cores[0].land_success);
-        }
 
+            if (data[i].rocket.first_stage.cores[0].land_success == null) {
+                $(".member-detail").hide();
+            }
+        }
     });
-    $("a.year").on("click mousedown touchstart", function() {
+    $(".launch-year a.year").on("click touchstart", function() {
+
         var year = $(this).html();
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            $(".member-detail").show();
+            return false;
+        }
         $("a.year").removeClass("active");
         $(this).addClass("active");
         for (i = 0; i < datalive.length; i++) {
@@ -81,11 +90,85 @@ jQuery(document).ready(function() {
                 $("#mem-detail" + i).hide();
             }
         }
+        return false;
     });
-    $("a.launch").on("click mousedown touchstart", function() {
-        var launch = $(this).text();
+    $("#true_launch").on("click touchstart", function() {
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            $(".member-detail").show();
+            return false;
+        }
         $("a.launch").removeClass("active");
         $(this).addClass("active");
-        console.log(launch);
+        for (i = 0; i < datalive.length; i++) {
+            if (datalive[i].launch_success) {
+                $("#mem-detail" + i).show();
+            } else {
+                $("#mem-detail" + i).hide();
+            }
+
+        }
+        return false;
+    });
+
+    $("#false_launch").on("click touchstart", function() {
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            $(".member-detail").show();
+            return false;
+        }
+        $("a.launch").removeClass("active");
+        $(this).addClass("active");
+        for (i = 0; i < datalive.length; i++) {
+            if (!(datalive[i].launch_success)) {
+                $("#mem-detail" + i).show();
+            } else {
+                $("#mem-detail" + i).hide();
+            }
+
+        }
+        return false;
+    });
+
+
+
+
+    $("#true_land").on("click touchstart", function() {
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            $(".member-detail").show();
+            return false;
+        }
+        $("a.landing").removeClass("active");
+        $(this).addClass("active");
+        for (i = 0; i < datalive.length; i++) {
+            console.log(datalive[i].rocket.first_stage.cores[0].land_success);
+            if (datalive[i].rocket.first_stage.cores[0].land_success) {
+                $("#mem-detail" + i).show();
+            } else {
+                $("#mem-detail" + i).hide();
+            }
+
+        }
+        return false;
+    });
+
+    $("#false_land").on("click touchstart", function() {
+        if ($(this).hasClass("active")) {
+            $(this).removeClass("active");
+            $(".member-detail").show();
+            return false;
+        }
+        $("a.landing").removeClass("active");
+        $(this).addClass("active");
+        for (i = 0; i < datalive.length; i++) {
+            if (!(datalive[i].rocket.first_stage.cores[0].land_success) && !(datalive[i].rocket.first_stage.cores[0].land_success == null)) {
+                $("#mem-detail" + i).show();
+            } else {
+                $("#mem-detail" + i).hide();
+            }
+
+        }
+        return false;
     });
 });
